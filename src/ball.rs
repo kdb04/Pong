@@ -1,4 +1,5 @@
 use raylib::core::*;
+use raylib::prelude::*;
 
 pub struct ball{
     pub x: i32,
@@ -26,7 +27,7 @@ impl ball{
 
     }
 
-    pub fn draw(&mut self, d: &mut raylib::prelude::RaylibDrawHandle){
+    pub fn draw(&mut self, d: &mut RaylibDrawHandle){
         d.draw_circle(self.x, self.y, 10, Color::BLUE);
     }
 }
