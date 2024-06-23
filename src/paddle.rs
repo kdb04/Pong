@@ -1,15 +1,15 @@
 use raylib::core::*;
 use raylib::prelude::*;
 
-pub struct paddle{
+pub struct Paddle{
     pub x: i32;
     pub y: i32;
     pub speed: f32;
 }
 
-impl paddle{
+impl Paddle{
     pub fn init(x:i32, y:i32, speed:f32)->Self{
-        paddle{x, y, speed}
+        Paddle{x, y, speed}
     }
 
     pub fn update(&mut self, screen_height: i32, up:bool, down:bool){

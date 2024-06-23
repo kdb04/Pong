@@ -1,16 +1,16 @@
 use raylib::core::*;
 use raylib::prelude::*;
 
-pub struct ball{
+pub struct Ball{
     pub x: i32,
     pub y: i32,//positions
     pub vx: f32,
     pub vy: f32,//velocities
 }
 
-impl ball{
+impl Ball{
     pub fn init(x:i32, y:i32, vx:f32, vy:f32)->Self{
-        ball{x,y,vx,vy}
+        Ball{x,y,vx,vy}
     }
 
     pub fn change_dir(&mut self, screen_width: i32, screen_height: i32){
