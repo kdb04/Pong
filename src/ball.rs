@@ -17,17 +17,17 @@ impl Ball{
         self.x += self.vx as i32;
         self.y += self.vy as i32;
 
-        if (self.x <= 0 || self.x + 10 >= screen_width){
+        if self.x <= 0 || self.x + 10 >= screen_width{
             self.vx = -self.vx; //change direction after collision
         }
 
-        if (self.y <=0 || self.y + 10 >= screen_height){
+        if self.y <=0 || self.y + 10 >= screen_height{
             self.vy = -self.vy;
         }
 
     }
 
     pub fn draw(&mut self, d: &mut RaylibDrawHandle){
-        d.draw_circle(self.x, self.y, 10, Color::BLUE);
+        d.draw_circle(self.x, self.y, 10.0, Color::BLUE);
     }
 }

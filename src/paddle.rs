@@ -2,9 +2,9 @@ use raylib::core::*;
 use raylib::prelude::*;
 
 pub struct Paddle{
-    pub x: i32;
-    pub y: i32;
-    pub speed: f32;
+    pub x: i32,
+    pub y: i32,
+    pub speed: f32,
 }
 
 impl Paddle{
