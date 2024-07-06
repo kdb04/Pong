@@ -1,6 +1,5 @@
 use raylib::prelude::*;
 use raylib::consts::KeyboardKey;
-use raylib::color::Color;
 
 use crate::ball::Ball;
 use crate::paddle::Paddle;
@@ -48,13 +47,13 @@ pub fn single_player(rl: &mut RaylibHandle, ball: &mut Ball, paddle1: &mut Paddl
 }
 
 pub fn multi_player(rl: &mut RaylibHandle, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, thread: &RaylibThread){
-    while(!rl.window_should_close()){
+    while !rl.window_should_close(){
         ball.change_dir(SCREEN_WIDTH, SCREEN_HEIGHT);
         paddle1.update(SCREEN_HEIGHT, rl.is_key_down(KeyboardKey::KEY_W), rl.is_key_down(KeyboardKey::KEY_S));
         paddle2.update(SCREEN_HEIGHT, rl.is_key_down(KeyboardKey::KEY_UP), rl.is_key_down(KeyboardKey::KEY_DOWN));
 
         *timer -= rl.get_frame_time();
-        if *timer<=0{
+        if *timer<=0.0{
             break;
         }
 
