@@ -1,8 +1,6 @@
 mod ball;
 mod paddle;
 
-use std::fmt::format;
-use::raylib::core::*;
 use::raylib::color::Color;
 use::raylib::prelude::*;
 use::raylib::consts::KeyboardKey;
@@ -73,10 +71,10 @@ fn main(){
     //Winner
     let mut draw = rl.begin_drawing(&thread);
     draw.clear_background(Color::BLACK);
-    if (score1>score2){
+    if score1>score2{
         draw.draw_text("Player1 wins!", SCREEN_WIDTH as i32 /2 - 100, SCREEN_HEIGHT as i32 /2, 50, Color::WHITE);
     }
-    else if (score2>score1){
+    else if score2>score1{
         draw.draw_text("Player2 wins!", SCREEN_WIDTH as i32 /2 - 100, SCREEN_HEIGHT as i32 /2, 50, Color::WHITE);
     }
     else{

@@ -1,4 +1,3 @@
-use raylib::core::*;
 use raylib::prelude::*;
 
 pub struct Paddle{
