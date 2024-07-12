@@ -28,32 +28,39 @@ fn main(){
     let mut score2 = 0;
     let mut timer = 60.0; //game terminates after 60 seconds
 
-    let mut game_mode = 1; //default: multi-player
-    
-    while !rl.window_should_close() {
-        match rl.get_key_pressed(){
-            Some(KeyboardKey::KEY_ONE) => {
-                game_mode = 1;
-                reset_game(&mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer);
-            },
-            Some(KeyboardKey::KEY_TWO) => {
-                game_mode = 2;
-                reset_game(&mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer);
-            },
-            _ => {}
-        }
+    let mut game_mode = 0; //default: multi-player
 
-        match game_mode {
-            1 => multi_player(&mut rl,  &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer),
-            2 => single_player(&mut rl, &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer),
-            _ => {
-                println!("Invalid game mode!");
-                return;
+    while !rl.window_should_close() {
+        if game_mode == 0{
+            if let Some(key) =  rl.get_key_pressed(){
+                match key{
+                    KeyboardKey::KEY_ONE => {
+                        game_mode = 1;
+                        reset_game(&mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer);
+                    },
+                    KeyboardKey::KEY_TWO => {
+                        game_mode = 2;
+                        reset_game(&mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer);
+                    },
+                    _ => {}
+                }
             }
+
+            let mut draw = rl.begin_drawing(&thread);
+            draw.clear_background(Color::BLACK);
+            draw.draw_text("Press 1 for multi-player", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 - 30, 30, Color::WHITE);
+            draw.draw_text("Press 2 for single player", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 + 30, 30, Color::WHITE);
         }
-        
-        if timer <= 0.0{
-            break;
+        else {
+            match game_mode {
+                1 => multi_player(&mut rl,  &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer),
+                2 => single_player(&mut rl, &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer),
+                _ => unreachable!(),
+
+            }
+            if timer <= 0.0{
+                break;
+            }
         }
     }
 

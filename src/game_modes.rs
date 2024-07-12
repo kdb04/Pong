@@ -14,17 +14,19 @@ pub fn single_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ba
     ball.change_dir(SCREEN_WIDTH, SCREEN_HEIGHT);
     paddle2.update(SCREEN_HEIGHT, draw.is_key_down(KeyboardKey::KEY_UP), draw.is_key_down(KeyboardKey::KEY_DOWN));
 
-    //auto-controlling paddle1
-    if ball.y < paddle1.y + 50{
-        paddle1.speed = -5.0;
-    }
-    else if ball.y > paddle1.y + 50{
-        paddle1.speed = 5.0;
-    }
-    else{
-        paddle1.speed = 0.0;
-    }
-    paddle1.update(SCREEN_HEIGHT, false, false);
+   //Auto-controlled paddle
+   let target_y = (ball.y - 50).clamp(0, SCREEN_HEIGHT - 100);
+   if (paddle1.y - target_y).abs() > paddle1.speed as i32{
+       if paddle1.y < target_y{
+           paddle1.y += paddle1.speed as i32;
+       }
+       else{
+           paddle1.y -= paddle1.speed as i32;
+       }
+   }
+   else{
+       paddle1.y = target_y;
+   }
 
     update_game_state(ball, paddle1, paddle2, score1, score2);
 
@@ -67,10 +69,9 @@ fn update_game_state(ball: &mut Ball, paddle1: &Paddle, paddle2: &Paddle, score1
 }
 
 fn draw_game(draw: &mut RaylibDrawHandle, ball: &mut Ball, paddle1: &Paddle, paddle2: &Paddle, score1: i32, score2: i32, timer: f32){
-    draw.draw_text(&format!("Player 1: {}", score1), 10, 10, 30, Color::WHITE);
-    draw.draw_text(&format!("Player 2: {}", score2), SCREEN_WIDTH - 150, 10, 30, Color::WHITE);
-    draw.draw_text(&format!("Timer: {}", timer), SCREEN_WIDTH/2 - 50, 10, 30, Color::WHITE);
-    draw.draw_text("Press 1 for Multiplayer, 2 for Single Player", 10, SCREEN_HEIGHT - 30, 20, Color::WHITE);
+    draw.draw_text(&format!("Player 1: {}", score1), 20, 10, 30, Color::WHITE);
+    draw.draw_text(&format!("Timer: {}", timer), SCREEN_WIDTH/2 - 70, 10, 30, Color::WHITE);
+    draw.draw_text(&format!("Player 2: {}", score2), SCREEN_WIDTH - 180, 10, 30, Color::WHITE);
 
     paddle1.draw(draw);
     paddle2.draw(draw);
