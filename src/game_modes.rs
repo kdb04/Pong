@@ -7,7 +7,7 @@ use crate::paddle::Paddle;
 const SCREEN_WIDTH: i32 = 1000;
 const SCREEN_HEIGHT: i32 = 800;
 
-pub fn single_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32){
+pub fn single_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, font: &Font){
     let mut draw = rl.begin_drawing(thread);
     draw.clear_background(Color::BLACK);
 
@@ -32,10 +32,10 @@ pub fn single_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ba
 
     *timer -= draw.get_frame_time();
 
-    draw_game(&mut draw, ball, paddle1, paddle2, *score1, *score2, *timer);
+    draw_game(&mut draw, ball, paddle1, paddle2, *score1, *score2, *timer, font);
 }
 
-pub fn multi_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32){
+pub fn multi_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, font: &Font){
     let mut draw = rl.begin_drawing(thread);
     draw.clear_background(Color::BLACK);
 
@@ -47,11 +47,10 @@ pub fn multi_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Bal
 
     *timer -= draw.get_frame_time();
 
-    draw_game(&mut draw, ball, paddle1, paddle2, *score1, *score2, *timer);
+    draw_game(&mut draw, ball, paddle1, paddle2, *score1, *score2, *timer, font);
 }
 
 fn update_game_state(ball: &mut Ball, paddle1: &Paddle, paddle2: &Paddle, score1: &mut i32, score2: &mut i32){
-    //Collision with left paddle
     if (ball.x <= paddle1.x + 10) && (ball.y >= paddle1.y) && (ball.y <= paddle2.y + 100){
         ball.vx = -ball.vx;
     }
@@ -68,10 +67,11 @@ fn update_game_state(ball: &mut Ball, paddle1: &Paddle, paddle2: &Paddle, score1
     }
 }
 
-fn draw_game(draw: &mut RaylibDrawHandle, ball: &mut Ball, paddle1: &Paddle, paddle2: &Paddle, score1: i32, score2: i32, timer: f32){
-    draw.draw_text(&format!("Player 1: {}", score1), 20, 10, 30, Color::WHITE);
-    draw.draw_text(&format!("Timer: {}", timer), SCREEN_WIDTH/2 - 70, 10, 30, Color::WHITE);
-    draw.draw_text(&format!("Player 2: {}", score2), SCREEN_WIDTH - 180, 10, 30, Color::WHITE);
+fn draw_game(draw: &mut RaylibDrawHandle, ball: &mut Ball, paddle1: &Paddle, paddle2: &Paddle, score1: i32, score2: i32, timer: f32, font: &Font){
+    draw.clear_background(Color::BLACK);
+    draw.draw_text_ex(font, &format!("Player 1: {}", score1), Vector2::new(20.0, 10.0), 40.0, 2.0, Color::AQUA);
+    draw.draw_text_ex(font, &format!("Timer: {}", timer), Vector2::new((SCREEN_WIDTH/2 - 70) as f32, 10.0), 40.0, 2.0, Color::AQUA);
+    draw.draw_text_ex(font, &format!("Player 2: {}", score2), Vector2::new((SCREEN_WIDTH - 180) as f32, 10.0), 40.0, 2.0, Color::AQUA);
 
     paddle1.draw(draw);
     paddle2.draw(draw);

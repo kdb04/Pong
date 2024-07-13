@@ -27,6 +27,6 @@ impl Ball{
     }
 
     pub fn draw(&mut self, d: &mut RaylibDrawHandle){
-        d.draw_circle(self.x, self.y, 10.0, Color::BLUE);
+        d.draw_circle(self.x, self.y, 10.0, Color::LIGHTGRAY);
     }
 }

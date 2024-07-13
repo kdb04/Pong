@@ -27,6 +27,6 @@ impl Paddle{
     }
 
     pub fn draw(&self, d: &mut RaylibDrawHandle){
-        d.draw_rectangle(self.x, self.y, 10, 100, Color::WHITE);
+        d.draw_rectangle(self.x, self.y, 10, 100, Color::LIGHTBLUE);
     }
 }
