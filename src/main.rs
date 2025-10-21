@@ -30,6 +30,7 @@ fn main(){
     let mut timer = 60.0; //game terminates after 60 seconds
 
     let mut game_mode = 0; //default: multi-player
+    let mut cooldown_time = 0.0;
 
     while !rl.window_should_close() {
         if game_mode == 0{
@@ -38,10 +39,12 @@ fn main(){
                     KeyboardKey::KEY_ONE => {
                         game_mode = 1;
                         reset_game(&mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer);
+                        cooldown_time = 0.0;
                     },
                     KeyboardKey::KEY_TWO => {
                         game_mode = 2;
                         reset_game(&mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer);
+                        cooldown_time = 0.0;
                     },
                     _ => {}
                 }
@@ -53,8 +56,10 @@ fn main(){
             draw.draw_text("Press 2 for single player", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 + 30, 30, Color::DARKBLUE);
         }
         else {
+            let frame_time = rl.get_frame_time();
+
             match game_mode {
-                1 => multi_player(&mut rl,  &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer, &custom_font),
+                1 => multi_player(&mut rl,  &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer, &custom_font, &mut cooldown_time, frame_time),
                 2 => single_player(&mut rl, &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer, &custom_font),
                 _ => unreachable!(),
 

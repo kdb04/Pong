@@ -35,17 +35,36 @@ pub fn single_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ba
     draw_game(&mut draw, ball, paddle1, paddle2, *score1, *score2, *timer, font);
 }
 
-pub fn multi_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, font: &WeakFont){
+pub fn multi_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, font: &WeakFont, cooldown_time: &mut f32, frame_time: f32){
     let mut draw = rl.begin_drawing(thread);
     draw.clear_background(Color::AZURE);
+
+    if *cooldown_time > 0.0{
+        *cooldown_time -= frame_time;
+        draw.draw_text(&format!("Cooldown Time: {:.0}", cooldown_time.ceil()), SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2, 30, Color::GREEN);
+        draw_game(&mut draw, ball, paddle1, paddle2, *score1, *score2, *timer, font);
+        return;
+    }
 
     ball.change_dir(SCREEN_WIDTH, SCREEN_HEIGHT);
     paddle1.update(SCREEN_HEIGHT, draw.is_key_down(KeyboardKey::KEY_W), draw.is_key_down(KeyboardKey::KEY_S));
     paddle2.update(SCREEN_HEIGHT, draw.is_key_down(KeyboardKey::KEY_UP), draw.is_key_down(KeyboardKey::KEY_DOWN));
 
+    if (ball.x + 10) >= SCREEN_WIDTH{
+        *score1+=1;
+        *ball = Ball::init(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, -5.0, -5.0);
+        *cooldown_time = 2.0;
+    }if(ball.x) <= 0{
+        *score2+=1;
+        *ball = Ball::init(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 5.0, 5.0);
+        *cooldown_time = 2.0;
+    }
+
     update_game_state(ball, paddle1, paddle2, score1, score2);
 
-    *timer -= draw.get_frame_time();
+    if *cooldown_time <= 0.0{
+        *timer -= frame_time;
+    }
 
     draw_game(&mut draw, ball, paddle1, paddle2, *score1, *score2, *timer, font);
 }
