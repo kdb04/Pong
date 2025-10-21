@@ -32,6 +32,8 @@ fn main(){
     let mut game_mode = 0; //default: multi-player
     let mut cooldown_time = 0.0;
 
+    let mut difficulty = 1; //default: easy
+
     while !rl.window_should_close() {
         if game_mode == 0{
             if let Some(key) =  rl.get_key_pressed(){
@@ -46,6 +48,15 @@ fn main(){
                         reset_game(&mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer);
                         cooldown_time = 0.0;
                     },
+                    KeyboardKey::KEY_THREE => {
+                        difficulty = 1;
+                    },
+                    KeyboardKey::KEY_FOUR => {
+                        difficulty = 2;
+                    },
+                    KeyboardKey::KEY_FIVE => {
+                        difficulty = 3;
+                    },
                     _ => {}
                 }
             }
@@ -53,14 +64,25 @@ fn main(){
             let mut draw = rl.begin_drawing(&thread);
             draw.clear_background(Color::AZURE);
             draw.draw_text("Press 1 for multi-player", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 - 30, 30, Color::GOLD);
-            draw.draw_text("Press 2 for single player", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 + 30, 30, Color::DARKBLUE);
+            draw.draw_text("Press 2 for single player", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2, 30, Color::DARKBLUE);
+            draw.draw_text("Press 3 for Easy AI", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 + 30, 30, Color::GREEN);
+            draw.draw_text("Press 4 for Medium AI", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 + 60, 30, Color::GREEN);
+            draw.draw_text("Press 5 for Hard AI", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 + 90, 30, Color::GREEN);
+
+            let chosen_difficulty = match difficulty{
+                1 => "Easy",
+                2 => "Medium",
+                3 => "Hard",
+                _ => "Easy",
+            };
+            draw.draw_text(&format!("Current Difficulty:{}", chosen_difficulty), SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 + 140, 30, Color::GREEN);
         }
         else {
             let frame_time = rl.get_frame_time();
 
             match game_mode {
                 1 => multi_player(&mut rl,  &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer, &custom_font, &mut cooldown_time, frame_time),
-                2 => single_player(&mut rl, &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer, &custom_font),
+                2 => single_player(&mut rl, &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer, &custom_font, difficulty),
                 _ => unreachable!(),
 
             }

@@ -7,21 +7,28 @@ use crate::paddle::Paddle;
 const SCREEN_WIDTH: i32 = 1000;
 const SCREEN_HEIGHT: i32 = 800;
 
-pub fn single_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, font: &WeakFont){
+pub fn single_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, font: &WeakFont, difficulty: i32){
     let mut draw = rl.begin_drawing(thread);
     draw.clear_background(Color::AZURE);
 
     ball.change_dir(SCREEN_WIDTH, SCREEN_HEIGHT);
     paddle2.update(SCREEN_HEIGHT, draw.is_key_down(KeyboardKey::KEY_UP), draw.is_key_down(KeyboardKey::KEY_DOWN));
 
-   //Auto-controlled paddle
+   //custom difficulty levels
+   let ai_speed = match difficulty {
+      1 => 3.0,
+      2 => 5.0,
+      3 => 7.0,
+      _ => 3.0
+   };
+
    let target_y = (ball.y - 50).clamp(0, SCREEN_HEIGHT - 100);
-   if (paddle1.y - target_y).abs() > paddle1.speed as i32{
+   if (paddle1.y - target_y).abs() > ai_speed as i32{
        if paddle1.y < target_y{
-           paddle1.y += paddle1.speed as i32;
+           paddle1.y += ai_speed as i32;
        }
        else{
-           paddle1.y -= paddle1.speed as i32;
+           paddle1.y -= ai_speed as i32;
        }
    }
    else{
