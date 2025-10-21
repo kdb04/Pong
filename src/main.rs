@@ -108,7 +108,7 @@ fn main(){
     drop(draw);
 
     while !rl.window_should_close() {
-        rl.begin_drawing(&thread);
+        let _ = rl.begin_drawing(&thread);
     }
 }
 
