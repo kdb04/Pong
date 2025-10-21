@@ -16,12 +16,11 @@ const SCREEN_HEIGHT: i32 = 800;
 fn main(){
     let (mut rl, thread) = raylib::init()
         .size(SCREEN_WIDTH, SCREEN_HEIGHT)
-        .title("Ping-Pong")
+        .title("PongDaddy")
         .build();
     rl.set_target_fps(60);
 
-    let mut custom_font = rl.load_font(&thread, "/home/nikhil/rustproj/pingpong/assets/NotoSans-Regular.ttf").unwrap();
-
+    let custom_font = rl.get_font_default();
     let mut ball = Ball::init(SCREEN_WIDTH/2, SCREEN_HEIGHT, 5.0, 5.0);
     let mut paddle1 = Paddle::init(50, (SCREEN_HEIGHT/2)-50, 5.0); //Relative positions and velocity
     let mut paddle2 = Paddle::init(SCREEN_WIDTH-50-10, (SCREEN_HEIGHT/2)-50, 5.0);
@@ -49,14 +48,14 @@ fn main(){
             }
 
             let mut draw = rl.begin_drawing(&thread);
-            draw.clear_background(Color::BLACK);
-            draw.draw_text("Press 1 for multi-player", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 - 30, 30, Color::WHITE);
-            draw.draw_text("Press 2 for single player", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 + 30, 30, Color::WHITE);
+            draw.clear_background(Color::AZURE);
+            draw.draw_text("Press 1 for multi-player", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 - 30, 30, Color::GOLD);
+            draw.draw_text("Press 2 for single player", SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 + 30, 30, Color::DARKBLUE);
         }
         else {
             match game_mode {
-                1 => multi_player(&mut rl,  &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer, &mut custom_font),
-                2 => single_player(&mut rl, &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer, &mut custom_font),
+                1 => multi_player(&mut rl,  &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer, &custom_font),
+                2 => single_player(&mut rl, &thread, &mut ball, &mut paddle1, &mut paddle2, &mut score1, &mut score2, &mut timer, &custom_font),
                 _ => unreachable!(),
 
             }
@@ -68,17 +67,17 @@ fn main(){
 
     //Winner
     let mut draw = rl.begin_drawing(&thread);
-    draw.clear_background(Color::BLACK);
+    draw.clear_background(Color::AZURE);
     if score1>score2{
-        draw.draw_text("Player1 wins!", SCREEN_WIDTH as i32 /2 - 100, SCREEN_HEIGHT as i32 /2, 50, Color::WHITE);
+        draw.draw_text("Player1 wins!", SCREEN_WIDTH as i32 /2 - 100, SCREEN_HEIGHT as i32 /2, 50, Color::GOLD);
     }
     else if score2>score1{
-        draw.draw_text("Player2 wins!", SCREEN_WIDTH as i32 /2 - 100, SCREEN_HEIGHT as i32 /2, 50, Color::WHITE);
+        draw.draw_text("Player2 wins!", SCREEN_WIDTH as i32 /2 - 100, SCREEN_HEIGHT as i32 /2, 50, Color::DARKBLUE);
     }
     else{
-        draw.draw_text("Tie!", SCREEN_WIDTH as i32 /2 - 100, SCREEN_HEIGHT as i32 /2, 50, Color::WHITE);
+        draw.draw_text("Tie!", SCREEN_WIDTH as i32 /2 - 100, SCREEN_HEIGHT as i32 /2, 50, Color::GREEN);
     }
-    draw.draw_text("Press ESC to exit", SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2 + 60, 30, Color::WHITE);
+    draw.draw_text("Press ESC to exit", SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2 + 60, 30, Color::GREEN);
     drop(draw);
 
     while !rl.window_should_close() {

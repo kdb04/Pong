@@ -7,9 +7,9 @@ use crate::paddle::Paddle;
 const SCREEN_WIDTH: i32 = 1000;
 const SCREEN_HEIGHT: i32 = 800;
 
-pub fn single_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, font: &Font){
+pub fn single_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, font: &WeakFont){
     let mut draw = rl.begin_drawing(thread);
-    draw.clear_background(Color::BLACK);
+    draw.clear_background(Color::AZURE);
 
     ball.change_dir(SCREEN_WIDTH, SCREEN_HEIGHT);
     paddle2.update(SCREEN_HEIGHT, draw.is_key_down(KeyboardKey::KEY_UP), draw.is_key_down(KeyboardKey::KEY_DOWN));
@@ -35,9 +35,9 @@ pub fn single_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ba
     draw_game(&mut draw, ball, paddle1, paddle2, *score1, *score2, *timer, font);
 }
 
-pub fn multi_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, font: &Font){
+pub fn multi_player(rl: &mut RaylibHandle, thread: &RaylibThread, ball: &mut Ball, paddle1: &mut Paddle, paddle2: &mut Paddle, score1: &mut i32, score2: &mut i32, timer: &mut f32, font: &WeakFont){
     let mut draw = rl.begin_drawing(thread);
-    draw.clear_background(Color::BLACK);
+    draw.clear_background(Color::AZURE);
 
     ball.change_dir(SCREEN_WIDTH, SCREEN_HEIGHT);
     paddle1.update(SCREEN_HEIGHT, draw.is_key_down(KeyboardKey::KEY_W), draw.is_key_down(KeyboardKey::KEY_S));
@@ -67,11 +67,23 @@ fn update_game_state(ball: &mut Ball, paddle1: &Paddle, paddle2: &Paddle, score1
     }
 }
 
-fn draw_game(draw: &mut RaylibDrawHandle, ball: &mut Ball, paddle1: &Paddle, paddle2: &Paddle, score1: i32, score2: i32, timer: f32, font: &Font){
-    draw.clear_background(Color::BLACK);
-    draw.draw_text_ex(font, &format!("Player 1: {}", score1), Vector2::new(20.0, 10.0), 40.0, 2.0, Color::AQUA);
-    draw.draw_text_ex(font, &format!("Timer: {}", timer), Vector2::new((SCREEN_WIDTH/2 - 70) as f32, 10.0), 40.0, 2.0, Color::AQUA);
-    draw.draw_text_ex(font, &format!("Player 2: {}", score2), Vector2::new((SCREEN_WIDTH - 180) as f32, 10.0), 40.0, 2.0, Color::AQUA);
+fn draw_game(draw: &mut RaylibDrawHandle, ball: &mut Ball, paddle1: &Paddle, paddle2: &Paddle, score1: i32, score2: i32, timer: f32, font: &WeakFont){
+    draw.clear_background(Color::AZURE);
+
+    //scoreboard to top-left corner
+    let start_x = 20.0;
+    let mut y_offset = 20.0;
+    let line_height = 40.0;
+    let font_size = 36.0;
+    let spacing = 2.0;
+
+    draw.draw_text_ex(font, &format!("Player 1: {}", score1), Vector2::new(start_x, y_offset), font_size, spacing, Color::GOLD);
+
+    y_offset += line_height;
+    draw.draw_text_ex(font, &format!("Timer: {:.1}", timer), Vector2::new(start_x, y_offset), font_size, spacing, Color::GREEN);
+
+    y_offset += line_height;
+    draw.draw_text_ex(font, &format!("Player 2: {}", score2), Vector2::new(start_x, y_offset), font_size, spacing, Color::DARKBLUE);
 
     paddle1.draw(draw);
     paddle2.draw(draw);
